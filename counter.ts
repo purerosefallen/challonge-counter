@@ -12,8 +12,17 @@ export interface Score {
 	points: number;
 }
 
+interface Tournament {
+	id: number;
+	name: string;
+	participants: Player[];
+	matches: Match[];
+	tournament_type: string;
+}
+
 interface MatchData {
 	id: number,
+	state: string,
 	player1_id: number,
 	player2_id: number,
 	winner_id: number,
@@ -63,24 +72,28 @@ export class Counter {
 	}
 	private async readTournament(tournament: string) {
 		//console.error(`Reading tournament ${tournament}.`);
-		const [players, matches] = await Promise.all(["participants", "matches"].map(t => axios.get(` https://api.challonge.com/v1/tournaments/${tournament}/${t}.json`, {
+		const tournamentData = (await axios.get(` https://api.challonge.com/v1/tournaments/${tournament}.json`, {
 			responseType: "json",
 			proxy: this.config.proxy,
 			params: {
 				api_key: this.config.apiKey,
-				state: t === "matches" ? "complete" : undefined
+				include_participants: 1,
+				include_matches: 1
 			}
-		})));
+		})).data.tournament as Tournament;
 		const playerNameMap = new Map<number, string>();
-		const playerResult = players.data as Player[];
+		const playerResult = tournamentData.participants;
 		for (let _player of playerResult) {
 			const player = _player.participant;
 			playerNameMap.set(player.id, player.display_name);
 			//console.error(`Read player ${player.id} => ${player.display_name}`);
 		}
-		const matchResult = matches.data as Match[];
+		const matchResult = tournamentData.matches;
 		for (let _match of matchResult) {
 			const match = _match.match;
+			if (match.state !== "complete") {
+				continue;
+			}
 			if (match.winner_id && match.loser_id) {
 				this.setScore(playerNameMap.get(match.winner_id), playerNameMap.get(match.loser_id));
 			} else {
