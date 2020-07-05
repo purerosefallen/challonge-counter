@@ -105,4 +105,9 @@ dist
 
 /build
 /output
+
+.git*
+.dockerignore
+Dockerfile
+.gitlab-ci.yml
 /config.yaml

@@ -1,0 +1,29 @@
+{
+  "name": "challonge-counter",
+  "version": "1.0.0",
+  "description": "Count Challonge match list and rank players",
+  "main": "build/run.js",
+  "scripts": {
+    "build": "./node_modules/.bin/tsc",
+    "start": "node build/run.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/purerosefallen/challonge-counter.git"
+  },
+  "author": "Nanahira",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/purerosefallen/challonge-counter/issues"
+  },
+  "homepage": "https://github.com/purerosefallen/challonge-counter#readme",
+  "dependencies": {
+    "@types/node": "^14.0.14",
+    "@types/underscore": "^1.10.3",
+    "@types/yaml": "^1.9.7",
+    "axios": "^0.19.2",
+    "typescript": "^3.9.6",
+    "underscore": "^1.10.2",
+    "yaml": "^1.10.0"
+  }
+}
